@@ -42,10 +42,13 @@ class WP_Bouncer
 
 		add_action('wp_login', array($this, 'login_track'));
 		add_action('init', array($this, 'login_flag'));
-		
-		$this->redirect = esc_url_raw( plugin_dir_url( __FILE__ ) . 'login-warning.php' );
 	}
-	
+
+	protected function get_redirect() {
+		$rd = apply_filters('wp_bouncer_rd', esc_url_raw( plugin_dir_url( __FILE__ ) . 'login-warning.php' ));
+		return $rd;
+	}
+
 	/**
 	 * helper function to get browser data at login
 	 *
@@ -147,8 +150,7 @@ class WP_Bouncer
 
 	public function flag_redirect() {
 
-		$base = plugin_dir_url( __FILE__ );
-		wp_redirect( $this->redirect );
+		wp_redirect( $this->get_redirect() );
 		exit();
 
 	}
